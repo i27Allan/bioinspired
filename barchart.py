@@ -39,11 +39,20 @@ def plotFitnes(listMean,listHigh):
 	autolabel(rects2)
 
 	plt.show()
-"""
-mean = []
-high = []
-for x in range(30):
-		mean.append(random.randint(0,8))
-		high.append(random.randint(0,8))
-plotFitnes(mean,high)
-"""
+	
+def lineChart(meanList, highList):
+	mean = meanList
+	high = highList
+
+	N = len(mean)
+	ind = np.arange(N)
+
+	fig, ax = plt.subplots()
+
+	ax.plot(ind,mean,'-r',label='Mean')
+	ax.plot(ind,high,'-b',label='Highest')
+	ax.set_ylabel('Fitness')
+	ax.set_xlabel('Generations')
+	ax.set_title('Fitness by Generation')
+	ax.legend(loc='upper right')
+	plt.show()
