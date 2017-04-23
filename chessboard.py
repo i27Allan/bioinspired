@@ -113,7 +113,6 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             point = random.randint(0, length - 1)
             c1 = gen1[:point]
             c2 = gen2[:point]
-            print([i for i in range(point, length)])
             for i in range(point, length):
                 if gen2[i] not in c1:
                     c1.append(gen2[i])
@@ -157,7 +156,7 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             else:
                 # if the point fell in a middle of an block, the slice will divide this number's bits
                 next_block = block+1  # the next is where the offset is positioned
-                bit_size = len(bin(length-1)) - 2  # gets the size of each block
+                bit_size = int(length - 1).bit_length()  # gets the size of each block
                 shift_size = bit_size - offset
 
                 n1 = (gen1[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent1
