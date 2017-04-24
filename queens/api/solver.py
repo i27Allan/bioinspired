@@ -18,7 +18,7 @@ class Population(list):
             else:
                 r = mid
         self.insert(l, ind)
-        self.mean += float(ind.fitness)/self.population_size
+        self.evaluate_mean()
 
     def better2of5(self):
         _5selected = list([])
@@ -32,13 +32,16 @@ class Population(list):
     def mutate(self):
         ind = random.randint(0, self.__len__() - 1)
         self[ind].mutate()
+        self.evaluate_mean()
 
     def pop_front(self):
-        self.mean -= float(self[0].fitness)/self.population_size
         del self[0]
 
+    def evaluate_mean(self):
+        self.mean = sum(ind.fitness for ind in self)/float(self.__len__())
 
-def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_prob: float, max_fits: int, out_file: str = None):
+
+def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_prob: float, max_fits: int, to_django=False):
     population = Population(population_size)
 
     for i in range(population_size):
@@ -53,10 +56,10 @@ def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_pro
             c1, c2 = population.better2of5()
             if c1.fitness > c2.fitness:
                 c1, c2 = c2, c1
-            if c1.fitness > population[0].fitness:
+            if c1.fitness >= population[0].fitness:
                 population.pop_front()
                 population.insort(c1)
-            if c2.fitness > population[0].fitness:
+            if c2.fitness >= population[0].fitness:
                 population.pop_front()
                 population.insort(c2)
         if p <= mut_prob:
@@ -65,10 +68,10 @@ def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_pro
         gens_mean.append(population.mean)
         gens_higher.append(population[-1].fitness)
 
-    line_chart(gens_mean, gens_higher, out_file=out_file)
     return {
         'candidate_solution': population[-1],
         'iterations': iterations,
+        'mean_high_plot': line_chart(gens_mean, gens_higher, to_django=to_django)
     }
 
 

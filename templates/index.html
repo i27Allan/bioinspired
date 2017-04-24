@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tags %}
 
 
 {% block content %}
@@ -15,7 +16,7 @@
                 <button type="submit" class="btn btn btn-default pull-right">
                     Find a solution <span class="glyphicon glyphicon-search"></span>
                 </button>
-                {% if iterations %}
+                {% if iterations >= 0 %}
                     <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#resultsModal">
                       Show results
                     </button>
@@ -24,7 +25,7 @@
         </div>
         <div class="col-md-2 col-xs-0"></div>
     </div>
-    {% if iterations %}
+    {% if iterations >= 0 %}
 
         <!-- Modal -->
         <div class="modal fade" id="resultsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -45,12 +46,25 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-xs-12 btn-group-vertical">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#chess_board">
+                                Show chessboard with highest fitness <span class="glyphicon glyphicon-arrow-down"></span>
+                            </button>
+                            <table id="chess_board" cellpadding="0" cellspacing="0" class="collapse text-center">
+                                {% for i in n_queens %}
+                                    <tr>
+                                        {% for j in n_queens %}
+                                            <td>
+                                                {% if i == candidate_solution|index:j %}&#9812;{% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
                             <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#mean_high_plot_img">
                                 Mean vs Highest fitness vs Generations <span class="glyphicon glyphicon-arrow-down"></span>
                             </button>
-                            {% with 'charts/mean_high_plot/'|add:plots_title as mean_high_plot_img %}
-                                <img class="col-xs-12 col-md-12 collapse" id="mean_high_plot_img" src="{% static mean_high_plot_img %}">
-                            {% endwith %}
+                            <img class="col-xs-12 col-md-12 collapse" id="mean_high_plot_img" src="data:image/png;base64, {{ mean_high_plot }}">
+
                         </div>
                     </div>
               </div>
@@ -61,4 +75,5 @@
           </div>
         </div>
     {% endif %}
+
 {% endblock %}
