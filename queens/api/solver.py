@@ -1,6 +1,7 @@
-from chessboard import Chessboard, crossover
+from queens.api.chessboard import Chessboard, crossover
+from queens.api.charts import line_chart
 import random
-import charts
+
 
 class Population(list):
     def __init__(self, population_size):
@@ -37,7 +38,7 @@ class Population(list):
         del self[0]
 
 
-def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_prob: float, max_fits: int):
+def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_prob: float, max_fits: int, out_file: str = None):
     population = Population(population_size)
 
     for i in range(population_size):
@@ -64,8 +65,13 @@ def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_pro
         gens_mean.append(population.mean)
         gens_higher.append(population[-1].fitness)
 
-    charts.line_chart(gens_mean, gens_higher)
-    print(population[-1], population[-1].fitness, iterations)
+    line_chart(gens_mean, gens_higher, out_file=out_file)
+    return {
+        'candidate_solution': population[-1],
+        'iterations': iterations,
+    }
+
+
 
 if __name__ == '__main__':
-    solve(10, 3000, False, 0.9, 0.4, 10000)
+    solve(8, 1000, True, 0.9, 0.4, 10000)

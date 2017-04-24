@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from django.http import HttpResponse
 
 def plotFitnes(listMean,listHigh):
     #len(mean/high) = quantidade de gerações
@@ -41,16 +43,20 @@ def plotFitnes(listMean,listHigh):
     plt.show()
 
 
-def line_chart(means_list, highers_list):
-    print(highers_list)
-    ind = np.arange(len(means_list))
+def line_chart(means_list, highers_list, out_file=None):
+    points = np.arange(len(means_list))
+    plt.gca().set_color_cycle(['red', 'green', 'blue', 'yellow'])
 
-    fig, ax = plt.subplots()
+    plt.plot(points, means_list)
+    plt.plot(points, highers_list)
 
-    ax.plot(ind, means_list, '-r', label='Mean')
-    ax.plot(ind, highers_list, '-b', label='Highest')
-    ax.set_ylabel('Fitness')
-    ax.set_xlabel('Generations')
-    ax.set_title('Fitness by Generation')
-    ax.legend(loc='upper right')
-    plt.show()
+    plt.legend(['Mean', 'Highest'], loc='upper left')
+    plt.xlabel('# mutation')
+    plt.ylabel('fitness')
+
+    if not out_file:
+        plt.show()
+    else:
+        plt.figure(1).savefig(out_file)
+
+    plt.gcf().clear()

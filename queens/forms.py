@@ -11,4 +11,4 @@ class OptionsForm(forms.Form):
                                                 ])
     probability_of_crossover = forms.FloatField(min_value=0, max_value=1.0)
     probability_of_mutation = forms.FloatField(min_value=0, max_value=1.0)
-    max_fitness_avaliations = forms.IntegerField(min_value=1)
+    max_fitness_evaluations = forms.IntegerField(min_value=1)
