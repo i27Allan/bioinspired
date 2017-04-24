@@ -59,9 +59,9 @@ class Chessboard(list):
             # mutation at bit string chromosome
             shift = random.randint(0, int(self.length - 1).bit_length())
             if self[pos1] & (1 << shift):
-                self[pos1] &= ~(1 << shift)
+                self[pos1] = (self[pos1] & ~(1 << shift)) % self.length
             else:
-                self[pos1] |= (1 << shift)
+                self[pos1] = (self[pos1] | (1 << shift)) % self.length
 
         def swap(self):
             pos2 = random.randint(0, self.length - 1)
@@ -80,7 +80,7 @@ class Chessboard(list):
         # print the genotype in a bit string format
         bits = ''
         for n in self:
-            bits += BitArray(uint=n, length=3).bin + ' '
+            bits += BitArray(uint=n, length=int(self.length).bit_length()).bin + ' '
         return bits
 
     def __str__(self):
@@ -161,12 +161,12 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
 
                 n1 = (gen1[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent1
                 n2 = gen2[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent2
-                n_res = n1 | n2  # concatenate them
+                n_res = (n1 | n2) % length  # concatenate them
                 c1 = gen1[:block] + [n_res] + gen2[next_block:]  # builds the child1
 
                 n1 = (gen2[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent2
                 n2 = gen1[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent1
-                n_res = n1 | n2  # concatenate them
+                n_res = (n1 | n2) % length # concatenate them
                 c2 = gen2[:block] + [n_res] + gen1[next_block:]  # builds the child2
 
         return c1, c2
