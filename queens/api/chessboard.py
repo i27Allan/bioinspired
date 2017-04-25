@@ -21,6 +21,7 @@ class Chessboard(list):
             super(Chessboard, self).__init__()
             self.extend(self.__genotype__())
         self.fitness = None
+        self.age = 0
         self.evaluate_fitness()
 
     def __genotype__(self):

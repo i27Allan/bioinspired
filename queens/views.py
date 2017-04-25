@@ -5,9 +5,10 @@ from queens.api import solver
 import time
 import hashlib
 
+
 # Create your views here.
 class IndexView(View):
-    form = OptionsForm
+    form = GeneticOptionsForm
 
     def get(self, request):
         form = self.form()
@@ -19,21 +20,22 @@ class IndexView(View):
             'form': form
         }
         if form.is_valid():
-            data = form.cleaned_data
+            options = form.save(commit=False)
             ret = solver.solve(
-                n_queens=data['number_of_queens'],
-                population_size=data['population_size'],
-                repr_optimization=(data['representation'] != 'bitstring'),
-                rec_prob=data['probability_of_crossover'],
-                mut_prob=data['probability_of_mutation'],
-                max_fits=data['max_fitness_evaluations'],
+                n_queens=options.number_of_queens,
+                population_size=options.population_size,
+                repr_optimization=(options.representation != 'bitstring'),
+                rec_prob=options.probability_of_crossover,
+                mut_prob=options.probability_of_mutation,
+                max_fits=options.max_fitness_evaluations,
+                parent_selection=options.parent_selection,
+                survivor_selection=options.survivor_selection,
                 to_django=True,
             )
             context['candidate_solution'] = ret.get('candidate_solution')
             context['iterations'] = ret.get('iterations')
             context['mean_high_plot'] = ret.get('mean_high_plot')
-            context['n_queens'] = range(int(data['number_of_queens']))
+            context['n_queens'] = range(int(options.number_of_queens))
 
-        print(context)
         return render(request, 'index.html', context)
 
