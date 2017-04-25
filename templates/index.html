@@ -73,11 +73,11 @@
                                 {% endfor %}
                             </table>
                             <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#mean_plot_img">
-                                Mean vs Highest fitness vs Generations <span class="glyphicon glyphicon-arrow-down"></span>
+                                Chart: Mean fitness per generation <span class="glyphicon glyphicon-arrow-down"></span>
                             </button>
                             <img class="col-xs-12 col-md-12 collapse" id="mean_plot_img" src="data:image/png;base64, {{ mean_plot }}">
                             <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#high_plot_img">
-                                Mean vs Highest fitness vs Generations <span class="glyphicon glyphicon-arrow-down"></span>
+                                Chart: Highest fitness per generation
                             </button>
                             <img class="col-xs-12 col-md-12 collapse" id="high_plot_img" src="data:image/png;base64, {{ high_plot }}">
                         </div>
