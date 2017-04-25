@@ -48,19 +48,22 @@ def line_chart(means_list, highers_list, to_django=False):
     plt.gca().set_color_cycle(['red', 'green', 'blue', 'yellow'])
 
     plt.plot(points, means_list)
-    plt.plot(points, highers_list)
-
-    plt.legend(['Mean', 'Highest'], loc='upper left')
+    plt.legend(['Mean'], loc='upper left')
     plt.xlabel('# mutation')
     plt.ylabel('fitness')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    mean = base64.b64encode(buf.getvalue()).decode()
+    plt.gcf().clear()
 
-    if not to_django:
-        plt.show()
-        plt.gcf().clear()
-    else:
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        plt.gcf().clear()
+    plt.plot(points, highers_list)
+    plt.legend(['Highest'], loc='upper left')
+    plt.xlabel('# mutation')
+    plt.ylabel('fitness')
+    buf2 = io.BytesIO()
+    plt.savefig(buf2, format='png')
+    highest = base64.b64encode(buf2.getvalue()).decode()
+    plt.gcf().clear()
 
-        return base64.b64encode(buf.getvalue()).decode()
+    return mean, highest
 

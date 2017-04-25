@@ -152,28 +152,29 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             global c1, c2
             point = random.randint(0, 3*length-1)  # gets the point-of-slice
             block, offset = int(point/3), point % 3  # figures out which block of n-bits the slicing will occur
-            block -= 1  # adjusts to 0-indexed
+            block = max(0, block-1)  # adjusts to 0-indexed
             if offset == 0:
                 # if the point fell on division of two blocks, just concatenate the arrays
                 c1 = gen1[:block] + gen2[block:]
                 c2 = gen2[:block] + gen1[block:]
             else:
                 # if the point fell in a middle of an block, the slice will divide this number's bits
-                next_block = block+1  # the next is where the offset is positioned
+                next_block = 0 if block == 0 else block+1  # the next is where the offset is positioned
+                # print("OIII", block, next_block, point, length)
                 bit_size = int(length - 1).bit_length()  # gets the size of each block
                 shift_size = bit_size - offset
 
                 n1 = (gen1[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent1
                 n2 = gen2[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent2
                 n_res = n1 | n2  # concatenate them
-                c1 = gen1[:block] + [n_res] + gen2[next_block:]  # builds the child1
+                adder = next_block + (next_block == 0)
+                c1 = gen1[:block] + [n_res] + gen2[adder:]  # builds the child1
 
                 n1 = (gen2[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent2
                 n2 = gen1[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent1
                 n_res = n1 | n2  # concatenate them
-                c2 = gen2[:block] + [n_res] + gen1[next_block:]  # builds the child2
-        # print('SACA', c1)
-        # print('SACA', c2)
+                adder = next_block + (next_block == 0)
+                c2 = gen2[:block] + [n_res] + gen1[adder:]  # builds the child2
         return c1, c2
 
     child1, child2 = __one_point__(gen1, gen2)

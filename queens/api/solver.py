@@ -89,7 +89,7 @@ class Population(list):
 
 
 def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_prob: float, max_fits: int,
-          parent_selection: str = 'tournament', survivor_selection: str = 'fitness_based', to_django=False):
+          parent_selection: str = 'tournament', survivor_selection: str = 'fitness_based'):
 
     population = Population(population_size, n_queens=n_queens, repr_optimization=repr_optimization,
                             survivor_selection=survivor_selection)
@@ -107,7 +107,8 @@ def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_pro
         if p <= mut_prob:
             population.mutate()
         iterations += 1
-        population.increment_age()
+        if population.survivor_selection == 'a':
+            population.increment_age()
 
         if best_fitness < population[-1].fitness:
             best_ind = copy.deepcopy(population[-1])
@@ -116,10 +117,12 @@ def solve(n_queens, population_size, repr_optimization, rec_prob: float, mut_pro
         gens_mean.append(population.mean)
         gens_higher.append(population[-1].fitness)
 
+    mean_plot, high_plot = line_chart(gens_mean, gens_higher)
     return {
         'candidate_solution': best_ind,
         'iterations': iterations,
-        'mean_high_plot': line_chart(gens_mean, gens_higher, to_django=to_django)
+        'mean_plot': mean_plot,
+        'high_plot': high_plot
     }
 
 

@@ -39,10 +39,22 @@
               </div>
               <div class="modal-body">
                     <div class="row">
-                        <h5 class="text-center col-md-12 col-xs-12">
-                            with {{ iterations }} iterations, the maximum reached fitness was {{ candidate_solution.fitness }}
-                            for solution {{ candidate_solution }}
-                        </h5>
+                        <div class="col-md-6 col-xs-6">
+                            <h5 id="summary">
+                                &#10093; <span id="iterations">{{ iterations }}</span> iterations;<br>
+                                &#10093; <span id="fitness">{{ candidate_solution.fitness }}</span> is the maximum fitness reached;<br>
+                                &#10093; <span id="candidate_solution">{{ candidate_solution }}</span> is the best solution;<br>
+                            </h5>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <h5 class="text-center" id="veredict">
+                                {% if candidate_solution.fitness == 0 %}
+                                    <span id="solved">&#10004; Problem solved!</span>
+                                {% else %}
+                                    <span id="not_solved">&#10008; Problem not solved.</span>
+                                {% endif %}
+                            </h5>
+                        </div>
                     </div>
                     <div class="row text-center">
                         <div class="col-md-12 col-xs-12 btn-group-vertical">
@@ -60,11 +72,14 @@
                                     </tr>
                                 {% endfor %}
                             </table>
-                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#mean_high_plot_img">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#mean_plot_img">
                                 Mean vs Highest fitness vs Generations <span class="glyphicon glyphicon-arrow-down"></span>
                             </button>
-                            <img class="col-xs-12 col-md-12 collapse" id="mean_high_plot_img" src="data:image/png;base64, {{ mean_high_plot }}">
-
+                            <img class="col-xs-12 col-md-12 collapse" id="mean_plot_img" src="data:image/png;base64, {{ mean_plot }}">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#high_plot_img">
+                                Mean vs Highest fitness vs Generations <span class="glyphicon glyphicon-arrow-down"></span>
+                            </button>
+                            <img class="col-xs-12 col-md-12 collapse" id="high_plot_img" src="data:image/png;base64, {{ high_plot }}">
                         </div>
                     </div>
               </div>

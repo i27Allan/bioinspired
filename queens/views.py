@@ -30,11 +30,11 @@ class IndexView(View):
                 max_fits=options.max_fitness_evaluations,
                 parent_selection=options.parent_selection,
                 survivor_selection=options.survivor_selection,
-                to_django=True,
             )
             context['candidate_solution'] = ret.get('candidate_solution')
             context['iterations'] = ret.get('iterations')
-            context['mean_high_plot'] = ret.get('mean_high_plot')
+            context['mean_plot'] = ret.get('mean_plot')
+            context['high_plot'] = ret.get('high_plot')
             context['n_queens'] = range(int(options.number_of_queens))
 
         return render(request, 'index.html', context)
