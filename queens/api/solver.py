@@ -44,13 +44,13 @@ class Population(list):
     def roulette(self):
         def rotate(population):
             total_fitness = sum(ind.fitness for ind in population)
-            picked = random.uniform(0, total_fitness)
+            picked = random.uniform(0, abs(total_fitness))
             current = 0
             for ind in population:
-                current += ind.fitness
+                current += abs(ind.fitness)
                 if current > picked:
                     return ind
-            return population[0]
+            # return population[0]
 
         parent1, parent2 = rotate(self), rotate(self)
         c1, c2 = crossover(parent1, parent2)
@@ -67,14 +67,10 @@ class Population(list):
                 self.pop_front()
                 self.insort(c2)
         else:
-            if c1.age < c2.age:
-                c1, c2 = c2, c1
-            if c1.age <= self[-1].age:
-                self.pop_front()
-                self.insort(c1)
-            if c2.fitness <= self[-1].age:
-                self.pop_front()
-                self.insort(c2)
+            del self[-1]
+            del self[-1]
+            self.insort(c1)
+            self.insort(c2)
 
     def mutate(self):
         ind = random.randint(0, self.__len__() - 1)

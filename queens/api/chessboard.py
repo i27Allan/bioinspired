@@ -97,7 +97,8 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
 
     length = len(gen1)
     if length != len(gen2):
-        # only same length genotypes can be merged
+        print(gen1)
+        print(gen2)
         raise CrossoverNotSupportedException('Genotypes have different lengths')
 
     repr_optimization = gen1.repr_optimization or gen2.repr_optimization
@@ -108,9 +109,10 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             """
             if the representation is through integers, the crossover process
             is applied slicing the left part of gen1 and the right part of gen2 to
-            be the child1 and the left part of gen2 and the right part of gen1 to 
+            be the child1 and the left part of gen2 and the right part of gen1 to
             be the child2.
             """
+            global c1, c2
             point = random.randint(0, length - 1)
             c1 = gen1[:point]
             c2 = gen2[:point]
@@ -147,6 +149,7 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
                 CHILD1: 001 001 100 110 0\\10 110 111 101 (left of '\\' is from PARENT1 and the right is from PARENT2)
                 CHILD2: 000 010 100 101 1\\00 000 100 011 (left of '\\' is from PARENT2 and the right is from PARENT1)
             """
+            global c1, c2
             point = random.randint(0, 3*length-1)  # gets the point-of-slice
             block, offset = int(point/3), point % 3  # figures out which block of n-bits the slicing will occur
             block -= 1  # adjusts to 0-indexed
@@ -162,14 +165,15 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
 
                 n1 = (gen1[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent1
                 n2 = gen2[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent2
-                n_res = (n1 | n2) % length  # concatenate them
+                n_res = n1 | n2  # concatenate them
                 c1 = gen1[:block] + [n_res] + gen2[next_block:]  # builds the child1
 
                 n1 = (gen2[next_block] >> shift_size) << shift_size  # gets the 'shift_size' first bits of parent2
                 n2 = gen1[next_block] & ((1 << shift_size) - 1)  # gets the 'shift_size' last bits of parent1
-                n_res = (n1 | n2) % length # concatenate them
+                n_res = n1 | n2  # concatenate them
                 c2 = gen2[:block] + [n_res] + gen1[next_block:]  # builds the child2
-
+        # print('SACA', c1)
+        # print('SACA', c2)
         return c1, c2
 
     child1, child2 = __one_point__(gen1, gen2)
