@@ -13,14 +13,16 @@
                     <legend>AG settings</legend>
                     {{ form.as_p }}
                 </fieldset>
-                <button type="submit" class="btn btn btn-default pull-right">
-                    Find a solution <span class="glyphicon glyphicon-search"></span>
-                </button>
-                {% if iterations >= 0 %}
-                    <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#resultsModal">
-                      Show results
+                <div class="btn-group pull-right">
+                    {% if iterations >= 0 %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resultsModal">
+                            Show results
+                        </button>
+                    {% endif %}
+                    <button type="submit" class="btn btn btn-default">
+                        Find a solution <span class="glyphicon glyphicon-search"></span>
                     </button>
-                {% endif %}
+                </div>
             </form>
         </div>
         <div class="col-md-2 col-xs-0"></div>
