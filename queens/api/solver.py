@@ -15,19 +15,19 @@ class Population(list):
             self.insort(individual)
 
     def insort(self, ind: Chessboard):
+        if self.__len__() > 0 and ind.fitness >= self[-1].fitness:
+            self.insert(-1, ind)
+            self.evaluate_mean()
+            return
         l, r = 0, self.__len__()
         while l < r:
             mid = int((l + r) / 2)
             if self.survivor_selection == 'f':
-                if ind.fitness > self[mid].fitness:
-                    l = mid + 1
-                else:
-                    r = mid
+                if ind.fitness < self[mid].fitness: r = mid
+                else: l = mid+1
             else:
-                if ind.age > self[mid].age:
-                    l = mid + 1
-                else:
-                    r = mid
+                if ind.age < self[mid].age: r = mid
+                else: l = mid+1
         self.insert(l, ind)
         self.evaluate_mean()
 
@@ -58,27 +58,24 @@ class Population(list):
 
     def offspring_insertion(self, c1: Chessboard, c2: Chessboard):
         if self.survivor_selection == 'f':
-            if c1.fitness > c2.fitness:
-                c1, c2 = c2, c1
-            if c1.fitness >= self[0].fitness:
-                self.pop_front()
-                self.insort(c1)
-            if c2.fitness >= self[0].fitness:
-                self.pop_front()
-                self.insort(c2)
-        else:
-            del self[-1]
-            del self[-1]
             self.insort(c1)
+            del self[0]
             self.insort(c2)
+            del self[0]
+        else:
+            self.insort(c2)
+            del self[-1]
+            self.insort(c2)
+            del self[-1]
+
 
     def mutate(self):
         ind = random.randint(0, self.__len__() - 1)
         self[ind].mutate()
+        tmp = self[ind]
+        del self[ind]
+        self.insort(tmp)
         self.evaluate_mean()
-
-    def pop_front(self):
-        del self[0]
 
     def evaluate_mean(self):
         self.mean = sum(ind.fitness for ind in self)/float(self.__len__())

@@ -49,7 +49,7 @@ def line_chart(means_list, highers_list, to_django=False):
 
     plt.plot(points, means_list)
     plt.legend(['Mean'], loc='upper left')
-    plt.xlabel('# mutation')
+    plt.xlabel('# generation')
     plt.ylabel('fitness')
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -58,7 +58,7 @@ def line_chart(means_list, highers_list, to_django=False):
 
     plt.plot(points, highers_list)
     plt.legend(['Highest'], loc='upper left')
-    plt.xlabel('# mutation')
+    plt.xlabel('# generation')
     plt.ylabel('fitness')
     buf2 = io.BytesIO()
     plt.savefig(buf2, format='png')
