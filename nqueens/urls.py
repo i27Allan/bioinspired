@@ -22,3 +22,4 @@ urlpatterns = [
     url(r'$', IndexView.as_view(), name='index'),
     url(r'solve/$', IndexView.as_view(), name='solve'),
 ]
+
