@@ -112,7 +112,6 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             be the child1 and the left part of gen2 and the right part of gen1 to
             be the child2.
             """
-            global c1, c2
             point = random.randint(0, length - 1)
             c1 = gen1[:point]
             c2 = gen2[:point]
