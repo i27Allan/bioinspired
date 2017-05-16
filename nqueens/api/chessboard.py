@@ -6,7 +6,7 @@ import random
 class Chessboard(list):
     def __init__(self, n_queens: int = 8, from_list=None, repr_optimization=False):
         """
-        :param n_queens: number of queens at chessboard
+        :param n_queens: number of nqueens at chessboard
         :param from_list: to initialize the chessboard genotype from a existing list 
         :param repr_optimization: False implies bit string representation will be used
         randomly generate the genotype and compute its fitness

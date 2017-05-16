@@ -1,1 +1,1 @@
-web: gunicorn nqueens.wsgi
+web: gunicorn bioinspired.wsgi
