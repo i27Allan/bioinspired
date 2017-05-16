@@ -6,7 +6,7 @@ import random
 class Chessboard(list):
     def __init__(self, n_queens: int = 8, from_list=None, repr_optimization=False):
         """
-        :param n_queens: number of nqueens at chessboard
+        :param n_queens: number of queens at chessboard
         :param from_list: to initialize the chessboard genotype from a existing list 
         :param repr_optimization: False implies bit string representation will be used
         randomly generate the genotype and compute its fitness
@@ -160,6 +160,7 @@ def crossover(gen1: Chessboard, gen2: Chessboard):
             else:
                 # if the point fell in a middle of an block, the slice will divide this number's bits
                 next_block = 0 if block == 0 else block+1  # the next is where the offset is positioned
+                # print("OIII", block, next_block, point, length)
                 bit_size = int(length - 1).bit_length()  # gets the size of each block
                 shift_size = bit_size - offset
 
