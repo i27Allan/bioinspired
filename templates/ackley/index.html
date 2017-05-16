@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block title %} The Ackley Problem {% endblock %}
+{% block appname %} ackley {% endblock %}
+
+{% block content %}
+    <div class="form-group row">
+        <div class="col-md-2 col-xs-0"></div>
+        <div class="col-md-8 col-xs-12 well">
+            <form action="{% url 'solve_ackley' %}" method="post">
+                {% csrf_token %}
+                <fieldset>
+                    <legend>ES settings</legend>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.number_of_dimensions.label_tag }}
+                            {{ form.number_of_dimensions }}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.survivor_selection.label_tag }}
+                            {{ form.survivor_selection }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.mi_size.label_tag }}
+                            {{ form.mi_size }}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.lambda_size.label_tag }}
+                            {{ form.lambda_size }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.crossover_operator.label_tag }}
+                            {{ form.crossover_operator }}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.sigma.label_tag }}
+                            {{ form.sigma }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.mutation_operator.label_tag }}
+                            {{ form.mutation_operator }}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.standard_deviation_change.label_tag }}
+                            {{ form.standard_deviation_change }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.stop_condition.label_tag }}
+                            {{ form.stop_condition }}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            {{ form.quantity.label_tag }}
+                            {{ form.quantity }}
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+                <div class="btn-group pull-right">
+                    {% if iterations >= 0 %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resultsModal">
+                            Show results
+                        </button>
+                    {% endif %}
+                    <button type="submit" class="btn btn btn-default">
+                        Find a solution <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2 col-xs-0"></div>
+    </div>
+    {% if iterations >= 0 %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="resultsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Results summary
+                </h4>
+              </div>
+              <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                            <h5 id="summary">
+                                &#10093; <span id="iterations">{{ iterations }}</span> iterations;<br>
+                                &#10093; <span id="fitness">{{ candidate_solution.fitness }}</span> is the maximum fitness reached;<br>
+                                &#10093; <span id="candidate_solution">{{ candidate_solution.genotype }}</span> is the best solution;<br>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-12 col-xs-12 btn-group-vertical">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#mean_plot_img">
+                                Chart: Mean fitness per generation
+                            </button>
+                            <img class="col-xs-12 col-md-12 collapse" id="mean_plot_img" src="data:image/png;base64, {{ mean_plot }}">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#high_plot_img">
+                                Chart: Lowest fitness per generation
+                            </button>
+                            <img class="col-xs-12 col-md-12 collapse" id="high_plot_img" src="data:image/png;base64, {{ high_plot }}">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#high_scatter_img">
+                                Chart: Fitness Incidence
+                            </button>
+                            <img class="col-xs-12 col-md-12 collapse" id="high_scatter_img" src="data:image/png;base64, {{ high_scatter }}">
+                            <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#sum_sd_plot_img">
+                                Chart: Lowest fitness individual SD sum per generation
+                            </button>
+                            <img class="col-xs-12 col-md-12 collapse" id="sum_sd_plot_img" src="data:image/png;base64, {{ sum_sd_plot }}">
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
