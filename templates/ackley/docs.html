@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ackley docs (Portuguese){% endblock %}
+{% block appname %}Ackley | docs{% endblock %}
+
+{% block content %}
+    <h1>A função de Ackley</h1>
+    <div>
+        <img src="{% static 'imgs/ackley.png' %}">
+        <img src="{% static 'imgs/ackley_plot.png' %}">
+    </div>
+    <p>
+        Função de <i><strong>d</strong></i> dimensões, com uma enorme quantidade de pontos que são
+        <a href="https://en.wikipedia.org/wiki/Local_optimum">ótimos locais</a> e um ponto que é ótimo local.
+        Essa característica a torna ideal para testar o desempenho de algoritmos de
+        <a href="https://en.wikipedia.org/wiki/Evolution_strategy">Estratégias Evolucionárias</a>. E é justamente essa
+        a proposta do Bioinspired | Ackley: Fornecer uma interface para testes e checagem do comportamento de um
+        algoritmo de estratégia evolucionária com base na variação de seus parâmetros e heurísticas.
+        <br><br>
+        <i>Para manter o ponto de mínimo global igual a zero, neste sistema os valores 20, 0.2 e 2&pi; são adotados para as
+        constantes <strong>a</strong>, <strong>b</strong> e <strong>c</strong>, respectivamente.</i>
+    </p>
+    <h2>Parâmetros do sistema:</h2>
+    <h3>Number of Dimensions</h3>
+        <p>
+            Representa o valor <i><strong>d</strong></i> da função. Determina o número de varíveis livres
+            (<i><strong>xi</strong></i>) da função.
+            Ou seja, se <i><strong>d</strong></i> é o valor passado em "Number of Dimensions", então
+            0 &lt; i &le; <i><strong>d</strong></i>, i &isin; &#8484;.
+        </p>
+    <h3>Survivor Selection</h3>
+    <p>Em algoritmos estratégias evolucionárias, a seleção dos sobreviventes de cada geração pode ser feita de duas maneiras diferentes:</p>
+    <ul>
+        <li>
+            (&mu; + &lambda;): Neste tipo de seleção, &mu; pais irão gerar &lambda; filhos e os &mu; melhores indivíduos do conjunto
+            de pais e filhos (&mu; + &lambda;) são escolhidos para a próxima geração.
+        </li>
+        <li>
+            (&mu;,&lambda;): Neste tipo de seleção, &mu; pais irão gerar &lambda; filhos e os &mu; melhores indivíduos do conjunto
+            de filhos (&lambda;) são escolhidos para a próxima geração (repare que a cada geração, o conjunto de pais da geração anterior
+            é completamente "esquecido".
+        </li>
+    </ul>
+    <p>
+        Repare que &mu; é o tamanho da população, pois toda geração, independente do processo de seleção de sobreviventes, sempre terá &mu; indivíduos.
+        O processo de seleção de sobreviventes só modifica a forma com a qual os &lambda; filhos recém-gerados são inseridos na população.
+        Para alcançar um bom desempenho na resolução do problema através de algoritmos evolucionários é ideal que &lambda; &gt; &mu;, pois desta forma
+        se garante que a geração de filhos terá relevância suficiente para melhorar a população da geração de pais. Além do mais, quanto maior o &lambda;,
+        maior é a probabilidade de gerar bons indivíduos a cada iteração. Testes mostram que a melhor proporção &mu;/&lambda; é equivalente a 1/7.
+    </p>
+    <h3>Mi size (&mu;)</h3>
+        Define o número de pais de cada geração (que é o mesmo que o número de indivíduos na população).
+    <h3>Lambda size (&lambda;)</h3>
+        Define quantos filhos são gerados em cada geração.
+    <h3>Crossover operator</h3>
+    <h5>Quanto à heurística:</h5>
+    <ul>
+        <li>Uniform: O i-ésimo gene do genótipo do novo indivíduo é uma cópia do i-ésimo gene do pai1 ou do i-ésimo gene do pai2, com probabilidade de 50% de escolha para cada pai.</li>
+        <li>Intermediary: O i-ésimo gene do genótipo do novo indivíduo recebe o valor ((1-&sigma;) &#215; i-ésimo_gene_pai1) &plus; (&sigma; &#215; i-ésimo_gene_pai_2), onde &sigma; é o fator de ponderação
+         e consiste num valor real entre 0 e 1 definido pelo programador.</li>
+    </ul>
+    <h5>Quanto ao escopo:</h5>
+    <ul>
+        <li>Local: crossover é feito de apenas 2 pais para formar o genótipo do filho</li>
+        <li>Global: é selecionado 2 pais para cada gene do filho</li>
+    </ul>
+
+    <h3>Sigma</h3>
+    Fator de ponderação (não precisa preencher caso estiver usando crossover uniforme). Entre 0 e 1.
+    <h2>Mutation Operetor</h2>
+    Foi usado a pertubação gaussiana para fazer o processo de mutação.
+    <h2>Standard deviation change</h2>
+    Mudança do passo de mutação que pode ser pelo selecionado pelo fitness (Success Rate) ou seguindo o Gaussian Multiple
+    <h2>Stop Condition</h2>
+    Condição de parada, que pode ser pela quantidade de interações do algorítimo ou pela quantidade de vezes que o algoritimo não conseguiu mudar o melhor fitness da população (Number of Draws)
+    <h2>Quantity</h2>
+    Número de interações ou o número de impates no melhor fitness da população
+    <h2>Chart: Mean fitness per generation</h2>
+    Gráfico que mostra a média de fitness com o decorrer das interações do algoritimo.
+    <h2>Chart: Lowest fitness per generation</h2>
+    Gráfico que mostra o melhor fitness com o decorrer das interações.
+    <h2>Chart: Fitness Incidence</h2>
+    Mostra a quantidade de vezes que os fitness se repetiram.<br>
+    Quando o algorítimo encontra um mínimo local o grafico apresenta uma área muito grande marcada.
+    <h2>Chart: Lowest fitness individual SD sum per generation</h2>
+    Mostra a soma dos divios padrão do melhor individuo da população por geração
+
+{% endblock %}

@@ -38,3 +38,7 @@ class IndexView(View):
             context['high_scatter'] = ret.get('high_scatter')
             context['sum_sd_plot'] = ret.get('sum_sd_plot')
         return render(request, 'ackley/index.html', context)
+
+
+def docs(request):
+    return render(request, 'ackley/docs.html')

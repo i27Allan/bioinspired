@@ -22,8 +22,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', nqueens.views.index, name='index'),
     url(r'^nqueens/$', nqueens.views.IndexView.as_view(), name='index_queens'),
-    url(r'^solve_queens/$', nqueens.views.IndexView.as_view(), name='solve_queens'),
+    url(r'^nqueens/solve$', nqueens.views.IndexView.as_view(), name='solve_queens'),
     url(r'^ackley/$', ackley.views.IndexView.as_view(), name='index_ackley'),
-    url(r'^solve_ackley/$', ackley.views.IndexView.as_view(), name='solve_ackley')
+    url(r'^ackley/solve/$', ackley.views.IndexView.as_view(), name='solve_ackley'),
+    url(r'^ackley/docs/pt/$', ackley.views.docs, name='docs_ackley')
 ]
 
