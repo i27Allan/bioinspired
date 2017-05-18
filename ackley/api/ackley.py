@@ -76,7 +76,7 @@ class Ackley(object):
             # print(self.genotype)
             candidate_genotype = np.array(self.genotype + np.random.normal(0, self.standard_deviation, self.dimension))
             candidate_genotype[candidate_genotype > 15] = np.random.uniform(low=-15, high=15)
-            candidate_genotype[candidate_genotype < 15] = np.random.uniform(low=-15, high=15)
+            candidate_genotype[candidate_genotype < -15] = np.random.uniform(low=-15, high=15)
             candidate_fitness = self.fitness_function(candidate_genotype, self.fitness_function_args)
             if candidate_fitness < self.fitness:
                 self.genotype = candidate_genotype
