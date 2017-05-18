@@ -8,9 +8,9 @@ class EvolutionaryOptionsForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'number_of_dimensions': forms.NumberInput(attrs={'min': 2, 'max': 40}),
-            'mi_size': forms.NumberInput(attrs={'min': 2}),
-            'lambda_size': forms.NumberInput(attrs={'min': 4}),
+            'number_of_dimensions': forms.NumberInput(attrs={'min': 1, 'max': 40}),
+            'mi_size': forms.NumberInput(attrs={'min': 1, 'max': 200}),
+            'lambda_size': forms.NumberInput(attrs={'min': 1, 'max': 200}),
             'sigma': forms.NumberInput(attrs={'min': 0, 'max': 1}),
-            'quantity': forms.NumberInput(attrs={'min': 1})
+            'quantity': forms.NumberInput(attrs={'min': 1, 'max': 1000})
         }
