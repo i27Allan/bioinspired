@@ -57,30 +57,52 @@
     <h5>Quanto à heurística:</h5>
     <ul>
         <li>Uniform: O i-ésimo gene do genótipo do novo indivíduo é uma cópia do i-ésimo gene do pai1 ou do i-ésimo gene do pai2, com probabilidade de 50% de escolha para cada pai.</li>
-        <li>Intermediary: O i-ésimo gene do genótipo do novo indivíduo recebe o valor ((1-&sigma;) &#215; i-ésimo_gene_pai1) &plus; (&sigma; &#215; i-ésimo_gene_pai_2), onde &sigma; é o fator de ponderação
+        <li>Intermediary: O i-ésimo gene do genótipo do novo indivíduo recebe o valor ((1-&delta;) &#215; i-ésimo_gene_pai1) &plus; (&delta; &#215; i-ésimo_gene_pai_2), onde &delta; é o fator de ponderação
          e consiste num valor real entre 0 e 1 definido pelo programador.</li>
     </ul>
     <h5>Quanto ao escopo:</h5>
     <ul>
-        <li>Local: crossover é feito de apenas 2 pais para formar o genótipo do filho</li>
-        <li>Global: é selecionado 2 pais para cada gene do filho</li>
+        <li>Local: todo genótipo do filho é gerado a partir de 2 únicos pais</li>
+        <li>Global: são selecionados 2 pais para cada gene do genótipo do filho</li>
     </ul>
 
-    <h3>Sigma (&sigma;)</h3>
+    <h3>Delta (&delta;)</h3>
     <p>
         Fator de ponderação (não precisa preencher caso estiver usando crossover uniforme). Entre 0 e 1.
     </p>
     <h3>Mutation Operetor</h3>
     <ul>
         <li>Gaussian Perturbation: Usa uma perturbação gaussiana para mutar os indivíduos, da seguinte forma:
-            Xi = Xi + N(0, &sigma;), onde &sigma; é o vetor de desvios padrão do indivíduo que está sendo mutado.
+            Xi' = Xi + N(0, &sigma;'i), onde &sigma;'i é o i-ésimo elemento do vetor de desvios padrão mutado* do indivíduo que está sendo mutado.
         </li>
     </ul>
     <p>
-        Vale ressaltar que antes de cada mutação, uma o vetor de desvios padrão do indivíduo é mutado através da heurística escolhida
+        * Antes de cada mutação, uma o vetor de desvios padrão do indivíduo é mutado através da heurística escolhida
         no parâmetro <i>standard deviation change</i>
     </p>
-    <h2>Standard deviation change</h2>
+    <figure>
+        <figcaption>
+            ** O desvio padrão de um genótipo também é chamado de <i>passo de mutação</i>, pois é ele quem define a amplitude dos valores
+            que serão adicionados a cada elemento do genótipo.
+        </figcaption>
+        <img src="{% static 'imgs/gaussian.png' %}" alt="Standard deviation behaviour">
+    </figure>
+    <h3>Standard deviation change</h3>
+    <p>
+        Define a heurística que irá ser usada para mutacionar o vetor de desvios padrão de cada indivíduo. Pode ser:
+    </p>
+    <ul>
+        <li>
+            Success Rate: A cada mutação é verificado se o genótipo resultante é melhor do que o genótipo mutacionado. Em caso afirmativo
+            uma unidade é adicionada a uma variável que acumula o número de mutações com sucesso. A partir daí, as novas mutações verificam a taxa
+            mutações_com_sucesso/total_mutações e um valor aleatório <strong><i>c</i></strong> é sorteado entre 0.8 e 1. Com isso, três situações podem acontecer:
+            <ol>
+                <li>Se a taxa < 1/5, então &sigma;' = &sigma;/c (aumentar a amplitude de variação)</li>
+                <li>Se a taxa > 1/5, então &sigma;' = &sigma; &#215; c (diminuir a amplitude de variação)</li>
+                <li>Se a taxa = 1/5, então &sigma;' = &sigma; (mantém a amplitude atual)</li>
+            </ol>
+        </li>
+    </ul>
     Mudança do passo de mutação que pode ser pelo selecionado pelo fitness (Success Rate) ou seguindo o Gaussian Multiple
     <h2>Stop Condition</h2>
     Condição de parada, que pode ser pela quantidade de interações do algorítimo ou pela quantidade de vezes que o algoritimo não conseguiu mudar o melhor fitness da população (Number of Draws)
