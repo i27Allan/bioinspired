@@ -83,7 +83,8 @@ def process(dimensions, mi, lamb, crossover_operator, mutation_operator, standar
     fitnesses, means, sum_sd = list([]), list([]), list([])
     while stop_cond < quantity:
         child_pop.clear()
-        print(pop[0].fitness, stop_cond, np.sum(pop[0].standard_deviation))
+        curr_sd_sum = np.sum(pop[0].standard_deviation)
+        print(pop[0].fitness, stop_cond, curr_sd_sum)
         for num_offspring in range(lamb):
             child = pop.crossover()
             if mi_plus_lambda:

@@ -13,7 +13,8 @@ def ackley_function(params: np.array, *args):
 
 class Ackley(object):
     def __init__(self, dimension: int, fitness_function, *args, lower_bound:float =0,
-                 upper_bound:float =0, genotype=None, standard_deviation=None):
+                 upper_bound:float =0, genotype=None, standard_deviation=None, mutations=0, successful_mutations=0,
+                 epsilon=1e-4):
         """
         :param dimension: number of nqueens at chessboard
         :param genotype: to initialize the chessboard genotype from a existing list
@@ -24,7 +25,8 @@ class Ackley(object):
         self.dimension = dimension
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
-        self.mutations, self.successful_mutations = 0, 0
+        self.mutations, self.successful_mutations = mutations, successful_mutations
+        self.epsilon = epsilon
 
         self.genotype = np.array(genotype) if genotype else self.__genotype__()
         self.standard_deviation = np.array(standard_deviation) if standard_deviation else self.__standard_deviation__()
@@ -51,20 +53,19 @@ class Ackley(object):
         def success_rate():
             success_rate = float(self.successful_mutations) / self.mutations
             c = np.random.uniform(low=0.8, high=1.0)
-            sd = None
             if success_rate > 0.2:
                 sd = (1 / c) * self.standard_deviation
             elif success_rate < 0.2:
                 sd = c * self.standard_deviation
             else:
                 sd = self.standard_deviation
-            sd[sd < 1e-4] = 1e-4
+            sd[sd < self.epsilon] = self.epsilon
             return sd
 
         def gaussian_multiple():
             gaussian_dsd = np.random.normal(0, self.standard_deviation, self.dimension)
             sd = np.array(self.standard_deviation*np.exp(gaussian_dsd))
-            sd[sd < 1e-4] = 1e-4
+            sd[sd < self.epsilon] = self.epsilon
             return sd
 
         new_sd = locals()[kind_of_heuristic]
@@ -77,11 +78,18 @@ class Ackley(object):
             candidate_genotype = np.array(self.genotype + np.random.normal(0, self.standard_deviation, self.dimension))
             candidate_genotype[candidate_genotype > 15] = np.random.uniform(low=-15, high=15)
             candidate_genotype[candidate_genotype < -15] = np.random.uniform(low=-15, high=15)
+            candidate_genotype[np.isnan(candidate_genotype)] = np.random.uniform(low=-15, high=15)
             candidate_fitness = self.fitness_function(candidate_genotype, self.fitness_function_args)
             if candidate_fitness < self.fitness:
+                self.successful_mutations += 1.0
                 self.genotype = candidate_genotype
                 self.fitness = candidate_fitness
-                self.successful_mutations += 1.0
+            else:
+                success_rate = float(self.successful_mutations) / self.mutations
+                prob = np.random.uniform(0, 1)
+                if success_rate < 0.2 and prob < 0.2:
+                    self.genotype = candidate_genotype
+                    self.fitness = candidate_fitness
 
         self.mutations += 1.0
         self.change_standard_deviation(kind_of_change_sd)
@@ -109,15 +117,26 @@ class Ackley(object):
         crossover_func = locals()[kind_of_crossover]
         child_genotype = list([0] * genotype_len)
         child_sd = list([0] * genotype_len)
-        i, j = np.random.randint(low=0, high=population_len), np.random.randint(low=0, high=population_len)
+        i, j = 0, 0
+        while i == j:
+            i, j = np.random.randint(low=0, high=population_len), np.random.randint(low=0, high=population_len)
+        mutationsp = population[i].mutations + population[j].mutations
+        mutationsp_success = population[i].successful_mutations + population[j].successful_mutations
+        count = 2
         for idx in range(genotype_len):
             if global_crossover:
-                i, j = np.random.randint(low=0, high=population_len), np.random.randint(low=0, high=population_len)
+                i, j = 0, 0
+                while i == j:
+                    i, j = np.random.randint(low=0, high=population_len), np.random.randint(low=0, high=population_len)
+                mutationsp += population[i].mutations + population[j].mutations
+                mutationsp_success += population[i].successful_mutations + population[j].successful_mutations
+                count += 2
             child_genotype[idx], child_sd[idx] = crossover_func(population[i], population[j], idx, sigma=sigma)
 
         child = Ackley(individual.dimension, individual.fitness_function, individual.fitness_function_args,
                        genotype=child_genotype, lower_bound=individual.lower_bound, upper_bound=individual.upper_bound,
-                       standard_deviation=child_sd)
+                       standard_deviation=child_sd, mutations=int(mutationsp/count),
+                       successful_mutations=int(mutationsp_success/count))
 
         return child
 
