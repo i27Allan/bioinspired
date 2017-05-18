@@ -73,11 +73,13 @@
     <h3>Mutation Operetor</h3>
     <ul>
         <li>Gaussian Perturbation: Usa uma perturbação gaussiana para mutar os indivíduos, da seguinte forma:
-            gen
-
+            Xi = Xi + N(0, &sigma;), onde &sigma; é o vetor de desvios padrão do indivíduo que está sendo mutado.
         </li>
     </ul>
-    Foi usado a pertubação gaussiana para fazer o processo de mutação.
+    <p>
+        Vale ressaltar que antes de cada mutação, uma o vetor de desvios padrão do indivíduo é mutado através da heurística escolhida
+        no parâmetro <i>standard deviation change</i>
+    </p>
     <h2>Standard deviation change</h2>
     Mudança do passo de mutação que pode ser pelo selecionado pelo fitness (Success Rate) ou seguindo o Gaussian Multiple
     <h2>Stop Condition</h2>
