@@ -116,7 +116,7 @@ def process(dimensions, mi, lamb, crossover_operator, mutation_operator, standar
         'iterations': iterations,
         'mean_plot': mean_plot,
         'high_plot': high_plot,
-        'high_scatter': scatter_chart(means, fitnesses),
+        'high_scatter': scatter_chart(fitnesses, 'lowest fitness', '# incidences'),
         'sum_sd_plot': sum_sd_plot
     }
 

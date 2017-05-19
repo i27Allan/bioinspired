@@ -21,6 +21,9 @@
         <i>Para manter o ponto de mínimo global igual a zero, neste sistema os valores 20, 0.2 e 2&pi; são adotados para as
         constantes <strong>a</strong>, <strong>b</strong> e <strong>c</strong>, respectivamente.</i>
     </p>
+    <br>
+    <hr style="color: black">
+    <br>
     <h2>Parâmetros do sistema:</h2>
     <h3>Number of Dimensions</h3>
         <p>
@@ -104,18 +107,49 @@
         </li>
     </ul>
     Mudança do passo de mutação que pode ser pelo selecionado pelo fitness (Success Rate) ou seguindo o Gaussian Multiple
-    <h2>Stop Condition</h2>
-    Condição de parada, que pode ser pela quantidade de interações do algorítimo ou pela quantidade de vezes que o algoritimo não conseguiu mudar o melhor fitness da população (Number of Draws)
-    <h2>Quantity</h2>
-    Número de interações ou o número de impates no melhor fitness da população
-    <h2>Chart: Mean fitness per generation</h2>
-    Gráfico que mostra a média de fitness com o decorrer das interações do algoritimo.
-    <h2>Chart: Lowest fitness per generation</h2>
-    Gráfico que mostra o melhor fitness com o decorrer das interações.
-    <h2>Chart: Fitness Incidence</h2>
-    Mostra a quantidade de vezes que os fitness se repetiram.<br>
-    Quando o algorítimo encontra um mínimo local o grafico apresenta uma área muito grande marcada.
-    <h2>Chart: Lowest fitness individual SD sum per generation</h2>
-    Mostra a soma dos divios padrão do melhor individuo da população por geração
+    <h3>Stop Condition</h3>
+        <ul>
+            <li>Number of iterations: a condição de parada será alcançada após o algoritmo gerar <i>N</i> gerações.</li>
+            <li>
+                Number of Draws: a condição de parada será alcançada após o algoritmo passar <i>N</i> gerações sem
+                mudança de fitness.
+            </li>
+        </ul>
+    <h3>Quantity</h3>
+            <p>
+                Define o valor <i>N</i>, citado na descrição do parâmetro anterior.
+            </p>
+    <h3>Chart: Mean fitness per generation</h3>
+        <figure>
+            <img src="{% static 'imgs/example_mean_generation.png' %}" style="height: 350px">
+            <figcaption>
+                Gráfico que mostra a média do fitness a cada geração.
+            </figcaption>
+        </figure>
+    <h3>Chart: Lowest fitness per generation</h3>
+        <figure>
+            <img src="{% static 'imgs/example_lowest_generation.png' %}" style="height: 350px;">
+            <figcaption>
+                Gráfico que mostra o melhor fitness a cada geração.
+            </figcaption>
+        </figure>
+    <h3>Chart: Fitness Incidence</h3>
+        <figure>
+            <img src="{% static 'imgs/example_fitness_incidende.png' %}" style="height: 350px;">
+            <figcaption>
+                Gráfico que mostra quantas vezes um valor de fitness foi repetido. Quanto maior o número de
+                repetições, maior o raio do círculo. Os círculos podem ser vistos como mínimos em que
+                as gerações ficaram presas. Quanto maior o círculo, mais tempo uma as gerações ficaram presas
+                no mínimo que ele representa.
+            </figcaption>
+        </figure>
+    <h3>Chart: Lowest fitness individual SD sum per generation</h3>
+        <figure>
+            <img src="{% static 'imgs/example_sd_sum.png' %}" style="height: 350px;">
+            <figcaption>
+                Gráfico que mostra a soma do vetor de desvios padrão do melhor indivíduo de cada geração.
+            </figcaption>
+        </figure>
 
+    <br><br>
 {% endblock %}

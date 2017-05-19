@@ -46,13 +46,15 @@ def plotFitnes(listMean,listHigh):
     plt.show()
 
 
-def scatter_chart(means_list, highers_list):
+def scatter_chart(highers_list, xlabel, ylabel):
     plt.gca().set_color_cycle(['red', 'green', 'blue', 'yellow'])
     count = collections.Counter(highers_list)
     points = np.array(list(count.keys()))
     incidence = np.array(list(count.values()))
     sizes = incidence**2
     plt.scatter(points, incidence, s=sizes, marker='o')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     higher = base64.b64encode(buf.getvalue()).decode()
