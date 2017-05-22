@@ -105,8 +105,11 @@
                 <li>Se a taxa = 1/5, então &sigma;' = &sigma; (mantém a amplitude atual)</li>
             </ol>
         </li>
+        <li>
+            Gaussian Multiple: &sigma;'i = &sigma;i &#215; N(0, &sigma;i)
+        </li>
     </ul>
-    Mudança do passo de mutação que pode ser pelo selecionado pelo fitness (Success Rate) ou seguindo o Gaussian Multiple
+
     <h3>Stop Condition</h3>
         <ul>
             <li>Number of iterations: a condição de parada será alcançada após o algoritmo gerar <i>N</i> gerações.</li>
@@ -115,10 +118,12 @@
                 mudança de fitness.
             </li>
         </ul>
+
     <h3>Quantity</h3>
-            <p>
-                Define o valor <i>N</i>, citado na descrição do parâmetro anterior.
-            </p>
+        <p>
+            Define o valor <i>N</i>, citado na descrição do parâmetro anterior.
+        </p>
+
     <h3>Chart: Mean fitness per generation</h3>
         <figure>
             <img src="{% static 'imgs/example_mean_generation.png' %}" style="height: 350px">
@@ -126,6 +131,7 @@
                 Gráfico que mostra a média do fitness a cada geração.
             </figcaption>
         </figure>
+
     <h3>Chart: Lowest fitness per generation</h3>
         <figure>
             <img src="{% static 'imgs/example_lowest_generation.png' %}" style="height: 350px;">
@@ -133,6 +139,7 @@
                 Gráfico que mostra o melhor fitness a cada geração.
             </figcaption>
         </figure>
+
     <h3>Chart: Fitness Incidence</h3>
         <figure>
             <img src="{% static 'imgs/example_fitness_incidende.png' %}" style="height: 350px;">
@@ -143,6 +150,7 @@
                 no mínimo que ele representa.
             </figcaption>
         </figure>
+
     <h3>Chart: Lowest fitness individual SD sum per generation</h3>
         <figure>
             <img src="{% static 'imgs/example_sd_sum.png' %}" style="height: 350px;">
@@ -151,5 +159,107 @@
             </figcaption>
         </figure>
 
+    <h2>Comportamento do algoritmo de acordo com a seleção de parâmetros</h2>
+        <p>
+            <i>
+                Todos os testes citados nesta seção têm as seguintes cosntantes em comum:
+                <strong>Number of dimensions</strong> = 30, <strong>Mi size</strong> = 10,
+                <strong>Lambda size</strong> = 70, <strong>Stop condition</strong> = Number
+                of Iterations, <strong>Quantity</strong> = 100.
+            </i>
+        </p>
+    <h3>Survivor selection</h3>
+    <ul>
+        <li><strong>&mu; + &lambda;</strong>: Pelo fato dessa estratégia de seleção de sobreviventes ser elitista/gulosa,
+        o algoritmo tende a ficar mais presos em pontos que são ótimos locais e, portanto, não são a melhor solução</li>
+        <li><strong>&mu;, &lambda;</strong>: A substituição da população pela sua prole a cada iteração do algoritmo, garante
+        que a variedade de indivíduos nas populações seja uma constante. Isso facilita para escapar de prisões em pontos
+        que são ótimos locais e convergir para o global.</li>
+    </ul>
+    <div class="row">
+        <figure class="col-md-6 col-xs-12">
+            <img src="{% static 'imgs/mi_plus_lambda_incidence.png' %}" style="height: 350px;">
+            <figcaption>
+                Com cem iterações, o melhor fitness alcançado foi em torno de 15, o que pode implicar uma
+                taxa de convergência para um ponto que seja ótimo global muito lenta. Os pontos mostram que
+                o algoritmo ficou preso por diversas vezes em ótimos locais.
+            </figcaption>
+        </figure>
+        <figure class="col-md-6 col-xs-12">
+            <img src="{% static 'imgs/mi_comma_lambda_incidence.png'%}" style="height: 350px;">
+            <figcaption>
+                Com cem iterações, o melhor fitness alcançado foi em torno de 6. A linha contínua mostra que,
+                mesmo ficando por poucas iterações em alguns pontos ótimos locais, a substituição de gerações faz com
+                que essa situação seja rapidamente driblada.
+            </figcaption>
+        </figure>
+        <br><br>
+        <p>
+            <i>
+                Como, dentre as duas opções, a que se mostrou melhor foi a &mu;, &lambda;, esta será deixada fixa para
+                as próximas análises.
+            </i>
+        </p>
+    </div>
+
+    <h3>Crosssover Operator</h3>
+    <ul>
+        <li>
+            <strong>Local</strong>:Como apenas dois pais são escolhidos para cruzar e gerar todos os genes do
+            filho, a taxa de convergência é levemente menor do que a heurística global. Contudo, a execução
+            do algoritmo é mais rápida.
+        </li>
+        <li>
+            <strong>Global</strong>: O fato de escolher 2*(Number of dimensions) pais para gerar cada filho
+            garante uma variade maior no genótipo e isso garante uma leve contribuição em casos em que é necessário
+            sair de um ponto ótimo local. A convergência é mais rápida, contudo a execução é um pouco mais lenta.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <strong>Intermediary</strong>: Quando o &delta; é diferente de zero, garante que todo gene tenha um percentual
+            de características de cada pai que o gerou. Isso garante maior diversidade e apresenta uma maior taxa de convergência.
+        </li>
+        <li>
+            <strong>Uniform</strong>: Equivalente à heurística Intermediary com &delta; igual a zero. Cada gene tem suas
+            características provenientes de apenas um de seus pais (decidido aleatoriamente), o que faz com que a convergência
+            se dê mais devagar do que a estratégia anterior.
+        </li>
+    </ul>
+    <p><i>Portanto, a melhor heurística é Global Intermediary com &delta; diferente de zero (quanto mais próximo de 0.5, mais
+        bem dividido será cada gene e, portanto, mais diversidade terá o genótipo).</i></p>
+
+    <h3>Standard deviation change</h3>
+    <ul>
+        <li>
+            <strong>Success Rate</strong>: A heurística de taxa de sucesso se mostra eficiente quando se trata de
+            escapar de ótimos locais e manter uma boa taxa de convergência. Isso porque, enquanto a convergência estiver
+            ocorrendo sem a ocorrência de o algoritmo ficar preso em ótimos locais, o vetor de desvios padrão tende a ficar
+            semelhante aquele que "desencadeou" essa melhora. Em contrapartida, quando o algoritmo fica preso em um ótimo local,
+            o vetor de desvios padrão sofre variadas perturbações afim de causar uma diversidade nos genótipos da população e, assim,
+            escapar daquele ótimo.
+        </li>
+        <li>
+            <strong>Gaussian Multiple</strong>: Apesar de ser uma heurísticca ótima para não ficar preso em ótimos locais,
+            ela não é boa em "manter o foco" quando algo bom está acontecendo e isso dificulta a convergência para um ótimo
+            global.
+        </li>
+    </ul>
+
+    <h2>Conclusão</h2>
+    <p>
+        Como pode ser percebido através das análises feitas, o problema de otimização da função de Ackley é melhor
+        e mais eficientemente resolvido através de uma estratégia evolutiva que pondere o elitismo e preserve a diversidade.
+        Qualquer decrescimento desses dois fatores é facilmente notável, pois o desempenho do algoritmo piora rapidamente.
+        Portanto, a melhor configuração para este problema é:
+    </p>
+    <ul>
+        <li><strong>Survivor selection</strong> = &mu;, &lambda;</li>
+        <li><strong>Mi size e lambda size</strong> = definidos de forma que &lambda; >> &mu; e, de preferência, com
+            razão de 1 para 7.
+        </li>
+        <li><strong>Crossover Operator</strong> = Global Intermediary, com &delta; próximo de 0.5.</li>
+        <li><strong>Standard deviation change</strong> = Success Rate.</li>
+    </ul>
     <br><br>
 {% endblock %}

@@ -7,7 +7,7 @@ import math
 class Population(list):
     def __init__(self, population_size: int = 30, dimension: int = 30, lower_bound: float = -15,
                  upper_bound: float = 15,
-                 crossover_operator: str = 'intermediary_crossover', global_crossover: bool = True, sigma: float = 0.5,
+                 crossover_operator: str = 'intermediary_crossover', global_crossover: bool = True, delta: float = 0.5,
                  mutation_operator: str = 'gaussian_perturbation', sd_change: str = 'success_rule',
                  from_list=None):
         super(Population, self).__init__()
@@ -15,7 +15,7 @@ class Population(list):
         self.population_size = population_size
         self.crossover_operator = crossover_operator
         self.global_crossover = global_crossover
-        self.sigma = sigma
+        self.delta = delta
         self.mutation_operator = mutation_operator
         self.sd_change = sd_change
         if from_list:
@@ -61,7 +61,7 @@ class Population(list):
         self.evaluate_mean()
 
     def crossover(self):
-        child = Ackley.crossover(self, self.crossover_operator, self.global_crossover, self.sigma)
+        child = Ackley.crossover(self, self.crossover_operator, self.global_crossover, self.delta)
         return child
 
     def evaluate_mean(self):
@@ -70,12 +70,12 @@ class Population(list):
 
 def process(dimensions, mi, lamb, crossover_operator, mutation_operator, standard_deviation_change,
             stop_iterations: bool = True, quantity: int = 100, global_crossover: bool = False,
-            mi_plus_lambda: bool = False, sigma: bool = 0.5):
+            mi_plus_lambda: bool = False, delta: bool = 0.5):
     pop = Population(population_size=mi, dimension=dimensions, crossover_operator=crossover_operator,
-                     global_crossover=global_crossover, mutation_operator=mutation_operator, sigma=sigma,
+                     global_crossover=global_crossover, mutation_operator=mutation_operator, delta=delta,
                      sd_change=standard_deviation_change)
     child_pop = Population(population_size=mi, dimension=dimensions, crossover_operator=crossover_operator,
-                           global_crossover=global_crossover, mutation_operator=mutation_operator, sigma=sigma,
+                           global_crossover=global_crossover, mutation_operator=mutation_operator, delta=delta,
                            sd_change=standard_deviation_change)
     minimal, before = pop[0], pop[0]
     minimal.fitness += 1e7
@@ -95,7 +95,7 @@ def process(dimensions, mi, lamb, crossover_operator, mutation_operator, standar
                 child_pop.mutate()
         if not mi_plus_lambda:
             pop = Population(population_size=mi, dimension=dimensions, crossover_operator=crossover_operator,
-                             global_crossover=global_crossover, mutation_operator=mutation_operator, sigma=sigma,
+                             global_crossover=global_crossover, mutation_operator=mutation_operator, delta=delta,
                              sd_change=standard_deviation_change, from_list=child_pop)
         minimal = pop[0] if pop[0].fitness < minimal.fitness else minimal
         fitnesses.append(pop[0].fitness)

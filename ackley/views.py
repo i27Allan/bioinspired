@@ -25,7 +25,7 @@ class IndexView(View):
                           mi_plus_lambda=('plus' in options.survivor_selection),
                           crossover_operator=crossover_op,
                           global_crossover=options.crossover_operator.startswith('global'),
-                          sigma=options.sigma,
+                          delta=options.delta,
                           mutation_operator=options.mutation_operator,
                           standard_deviation_change=options.standard_deviation_change,
                           stop_iterations=options.stop_condition.endswith('iterations'),

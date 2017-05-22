@@ -16,7 +16,7 @@ class EvolutionaryOptions(models.Model):
         ('local_uniform', 'Local Uniform'),
         ('global_uniform', 'Global Uniform')
     ])
-    sigma = models.FloatField(blank=True, null=True)
+    delta = models.FloatField(blank=True, null=True)
     mutation_operator = models.CharField(max_length=50, choices=[
         ('gaussian_perturbation', 'Gaussian Perturbation'),
     ])

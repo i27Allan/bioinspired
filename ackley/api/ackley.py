@@ -97,7 +97,7 @@ class Ackley(object):
         mutation_func()
 
     @staticmethod
-    def crossover(population, kind_of_crossover: str, global_crossover: bool = False, sigma: float = 0.5):
+    def crossover(population, kind_of_crossover: str, global_crossover: bool = False, delta: float = 0.5):
 
         def uniform_crossover(p1, p2, index, **kwargs):
             _X = np.random.uniform(low=0, high=1.0)
@@ -106,7 +106,7 @@ class Ackley(object):
             return gen, sd
 
         def intermediary_crossover(p1, p2, index, **kwargs) -> (Ackley, Ackley):
-            s = kwargs.pop('sigma')
+            s = kwargs.pop('delta')
             sd = (1 - s) * p1.standard_deviation[index] + s * p2.standard_deviation[index]
             gen = (1 - s) * p1.genotype[index] + s * p2.genotype[index]
             return gen, sd
@@ -131,7 +131,7 @@ class Ackley(object):
                 mutationsp += population[i].mutations + population[j].mutations
                 mutationsp_success += population[i].successful_mutations + population[j].successful_mutations
                 count += 2
-            child_genotype[idx], child_sd[idx] = crossover_func(population[i], population[j], idx, sigma=sigma)
+            child_genotype[idx], child_sd[idx] = crossover_func(population[i], population[j], idx, delta=delta)
 
         child = Ackley(individual.dimension, individual.fitness_function, individual.fitness_function_args,
                        genotype=child_genotype, lower_bound=individual.lower_bound, upper_bound=individual.upper_bound,
